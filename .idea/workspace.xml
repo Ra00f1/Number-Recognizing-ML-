@@ -2,6 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45d78362-25ce-4305-bc07-b7a8bab4bce2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/KNeighbors.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/X_test" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/X_train" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/knn_Library.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/y_test" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/y_train" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -24,19 +30,44 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2TCI61yvAwiSA16yWcBUPObz4l0" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.KNeighbors">
+    <configuration name="KNeighbors" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Number-Recognizing-ML-" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/KNeighbors.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Number-Recognizing-ML-" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -61,6 +92,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.KNeighbors" />
         <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
@@ -75,6 +107,8 @@
       <updated>1690540456192</updated>
       <workItem from="1690540459134" duration="5272000" />
       <workItem from="1690797991549" duration="8203000" />
+      <workItem from="1690879966118" duration="3357000" />
+      <workItem from="1691051708047" duration="6428000" />
     </task>
     <servers />
   </component>
@@ -92,7 +126,21 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/setup/Lib/site-packages/sklearn/metrics/_pairwise_distances_reduction/_dispatcher.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Number_Recognizing_ML_$main.coverage" NAME="main Coverage Results" MODIFIED="1690814096563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Number_Recognizing_ML_$KNeighbors.coverage" NAME="KNeighbors Coverage Results" MODIFIED="1691059670354" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Number_Recognizing_ML_$main.coverage" NAME="main Coverage Results" MODIFIED="1690885654176" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

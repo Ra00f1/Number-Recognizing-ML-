@@ -9,6 +9,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import confusion_matrix
+import threading
 
 def Download_MINST():
     mnist = fetch_openml('mnist_784', parser="auto")
@@ -23,17 +24,25 @@ def test_mnist(mnist):
     y = y.astype(np.uint8)
     X_train, X_test, y_train, y_test = x[:60000],x[60000:], y[:60000], y[60000:]
 
+    sgd_clf = SGDClassifier(random_state=42, verbose=1)
+    sgd_clf.fit(X_train, y_train)
+    print(sgd_clf.classes_)
+    test_digit = x[:1]
+    print(y[0])
+
+    print(sgd_clf.predict(test_digit))
+
+    # ------------------------------------------------------------------------------------------
     #simple test case (5 only)
-    y_train_5 = (y_train == 5)
-    y_test_5 = (y_test == 5)
-    sgd_clf = SGDClassifier(random_state=42)
-    sgd_clf.fit(X_train, y_train_5)
 
-    print(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
-    y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3)
-    print(confusion_matrix(y_train_5, y_train_pred))
-
-
+    #y_train_5 = (y_train == 5)
+    #y_test_5 = (y_test == 5)
+    #sgd_clf = SGDClassifier(random_state=42)
+    #sgd_clf.fit(X_train, y_train_5)
+    #print(cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy"))
+    #y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3)
+    #print(confusion_matrix(y_train_5, y_train_pred))
+#------------------------------------------------------------------------------------------
     #See the image
 
     #print(x[3:4].values.reshape((28,28)))
