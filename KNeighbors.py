@@ -1,19 +1,11 @@
-from sklearn.datasets import fetch_openml, load_digits
+import time
+
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-from sklearn import datasets, metrics, svm
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import SGDClassifier
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import cross_val_predict
-from sklearn.metrics import confusion_matrix, accuracy_score
-from sklearn.neighbors import KNeighborsClassifier
-import threading
-
-from joblib import Parallel, delayed
 import joblib
+from sklearn.datasets import fetch_openml
+from sklearn.metrics import accuracy_score
+from sklearn.neighbors import KNeighborsClassifier
 
 def Download_MINST():
     mnist = fetch_openml('mnist_784', parser="auto")
@@ -55,11 +47,12 @@ def K_Neighbors_Classifire(X_train, y_train):
     knn.fit(X_train, y_train)
     print("Training Completed!")
 
-    return knn
     #for a in range(1, 100000):
     #    if y_test[a-1:a].values != knn.predict(X_test[a-1:a]):
     #        print("Error: ", "Test Case = ", a, "Test Answer = ",y_test[a-1:a].values,"Predicted Asnwer = ", knn.predict(X_test[a-1:a]))
     #print("Test Completed!")
+
+    return knn
 
 
 def Test_Model(knn, X_test, y_test):
