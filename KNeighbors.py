@@ -54,7 +54,6 @@ def K_Neighbors_Classifire(X_train, y_train):
 
     return knn
 
-
 def Test_Model(knn, X_test, y_test):
     print("Testing Model!")
     y_pred = knn.predict(X_test)
