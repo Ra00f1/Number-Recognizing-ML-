@@ -4,14 +4,15 @@ import numpy as np
 def Euclidean_Distance(data):
     train_distance_list = []
     train_id_counter = []
+    length = len(data) - 59900
+    array = data.to_numpy()
 
-    for i in range(len(data)):
-        #if i%1000 == 0:
-        #    print(i, "/", len(data))
-        for j in range(len(data)):
+    for i in range(length):
+        print(i, "/", length)
+        for j in range(length):
             #distance = np.sqrt(np.sum(data.iloc[i] - data.iloc[j])**2)
-            x = data.iloc[i]
-            y = data.iloc[j]
+            x = array[i]
+            y = array[j]
             distance = np.sqrt(np.dot(x, x) - 2 * np.dot(x, y) + np.dot(y, y))
             train_distance_list.append(distance)
             train_id_counter.append(j)
