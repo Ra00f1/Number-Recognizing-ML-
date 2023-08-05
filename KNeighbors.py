@@ -47,10 +47,14 @@ def K_Neighbors_Classifire(X_train, y_train):
     knn.fit(X_train, y_train)
     print("Training Completed!")
 
-    #for a in range(1, 100000):
-    #    if y_test[a-1:a].values != knn.predict(X_test[a-1:a]):
-    #        print("Error: ", "Test Case = ", a, "Test Answer = ",y_test[a-1:a].values,"Predicted Asnwer = ", knn.predict(X_test[a-1:a]))
-    #print("Test Completed!")
+    """
+    Test:
+     
+    for a in range(1, 100000):
+        if y_test[a-1:a].values != knn.predict(X_test[a-1:a]):
+            print("Error: ", "Test Case = ", a, "Test Answer = ",y_test[a-1:a].values,"Predicted Asnwer = ", knn.predict(X_test[a-1:a]))
+    print("Test Completed!")
+    """
 
     return knn
 
@@ -80,10 +84,8 @@ if __name__ == "__main__":
 
     X_train, X_test, y_train, y_test = Loading_Data()
 
-    #KNN using sklearn library
-    #
-    #knn = K_Neighbors_Classifire(X_train, y_train)
-    #Test_Model(knn, X_test, y_test)
-    #Save_Model(knn, 'knn_Library')
-    #knn = Load_Model('knn_Library')
-    #Test_Model(knn, X_test, y_test)
+    knn = K_Neighbors_Classifire(X_train, y_train)
+    Test_Model(knn, X_test, y_test)
+    Save_Model(knn, 'knn_Library')
+    knn = Load_Model('knn_Library')
+    Test_Model(knn, X_test, y_test)
