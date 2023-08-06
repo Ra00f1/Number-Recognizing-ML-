@@ -4,25 +4,31 @@ import numpy as np
 def Euclidean_Distance(data):
     train_distance_list = []
     train_id_counter = []
-    length = len(data) - 59900
+    length = len(data)
     array = data.to_numpy()
 
-    for i in range(length):
-        print(i, "/", length)
-        for j in range(length):
-            #distance = np.sqrt(np.sum(data.iloc[i] - data.iloc[j])**2)
-            x = array[i]
-            y = array[j]
-            distance = np.sqrt(np.dot(x, x) - 2 * np.dot(x, y) + np.dot(y, y))
-            train_distance_list.append(distance)
-            train_id_counter.append(j)
+    import numpy as np
+    import pandas as pd
 
-        # make a dictionary
-        d = {'index': train_id_counter, 'distance': train_distance_list}
-        # convert dictionary to dataframe
-        df = pd.DataFrame(d, columns=['index', 'distance'])
-        # sort in ascending order by euclidean index
-        df_sorted = df.sort_values(by='index')
+    # Assuming 'array' is a NumPy array with shape (length, num_features)
+    length = array.shape[0]
+
+    # Initialize the lists to store distances and indices
+    train_distance_list = []
+    train_id_counter = []
+
+    for i in range(length):
+        print(i/length*100,"%")
+
+        # Calculate the Euclidean distance between array[i] and all other elements in 'array'
+        distance = np.sqrt(np.sum((array[i] - array) ** 2, axis=1))
+        train_distance_list.extend(distance)
+        train_id_counter.extend([i] * length)
+
+    d = {'index': train_id_counter, 'distance': train_distance_list}
+    df = pd.DataFrame(d, columns=['index', 'distance'])
+    df_sorted = df.sort_values(by='index')
+
     print(df_sorted)
     return df_sorted
 
