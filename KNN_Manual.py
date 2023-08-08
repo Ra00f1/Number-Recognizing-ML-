@@ -5,7 +5,6 @@ import multiprocessing
 
 def calculate_distance(args):
     array, chunk = args
-    print(chunk)
     dist = []
     start = time.time()
     for i in chunk:
@@ -61,6 +60,5 @@ def Loading_Data():
 
 if __name__ == "__main__":
     X_train, X_test, y_train, y_test = Loading_Data()
-
     Euclidean_Distance(X_train)
 

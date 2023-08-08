@@ -3,9 +3,7 @@ import numpy as np
 import time
 
 def Euclidean_Distance(data):
-    train_distance_list = []
-    train_id_counter = []
-    length = len(data)
+    data = data[:1000]
     array = data.to_numpy()
     # Assuming 'array' is a NumPy array with shape (length, num_features)
     length = array.shape[0]
