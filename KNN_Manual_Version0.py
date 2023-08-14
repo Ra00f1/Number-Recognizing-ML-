@@ -21,20 +21,27 @@ def Euclidean_Distance(data):
     df = pd.DataFrame(columns=['index', 'distance'])
 
     for i in range(length):
-        if i%100 == 0:
+        if i%100 == 0 and i != 0:
             end = time.time()
             print(i,"time: ", end - start)
+            d = {'index': train_id_counter , 'distance': train_distance_list}
+            temp_df = pd.DataFrame(d, columns=['index', 'distance'])
+            #temp_df = temp_df.sort_values(['index', 'distance'])
+            df = pd.concat([df, temp_df], ignore_index=True)
+            train_distance_list.clear()
+            train_id_counter.clear()
             start = time.time()
 
         # Calculate the Euclidean distance between array[i] and all other elements in 'array'
         distance = np.sqrt(np.sum((array[i] - array) ** 2, axis=1))
         train_distance_list.extend(distance)
         train_id_counter.extend([i] * length)
+        #print(df)
 
-    d = {'index': train_id_counter, 'distance': train_distance_list}
-    df = pd.DataFrame(d, columns=['index', 'distance'])
+    #d = {'index': train_id_counter, 'distance': train_distance_list}
+    #df = pd.DataFrame(d, columns=['index', 'distance'])
     df_sorted = df.sort_values(['index', 'distance'])
-
+    #df_sorted = df
     print(df_sorted)
     return df_sorted
 
