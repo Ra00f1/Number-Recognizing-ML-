@@ -50,10 +50,10 @@ def Euclidean_Distance(data):
 
 def Loading_Data():
     print("Loading Data!")
-    X_train = pd.read_csv("X_train", sep=',')
-    X_test = pd.read_csv("X_test", sep=',')
-    y_train = pd.read_csv("y_train", sep=',')
-    y_test = pd.read_csv("y_test", sep=',')
+    X_train = pd.read_csv("../Data/X_train", sep=',')
+    X_test = pd.read_csv("../Data/X_test", sep=',')
+    y_train = pd.read_csv("../Data/y_train", sep=',')
+    y_test = pd.read_csv("../Data/y_test", sep=',')
     print("Loading Completed!")
 
     return X_train, X_test, y_train, y_test
