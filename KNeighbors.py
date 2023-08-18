@@ -1,11 +1,13 @@
 import time
-
+from scipy.ndimage import shift
 import numpy as np
 import pandas as pd
 import joblib
 from sklearn.datasets import fetch_openml
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 def Download_MINST():
     mnist = fetch_openml('mnist_784', parser="auto")
@@ -23,6 +25,40 @@ def Divide_Data(mnist):
     X_train, X_test, y_train, y_test = x[:60000], x[60000:], y[:60000], y[60000:]
 
     return X_train, X_test, y_train, y_test
+
+def Shift_Images(X_train, y_train):
+    begin = time.time()
+    trainX_aug = []
+    trainY_aug = []
+
+    for image, label in zip(np.array(X_train), y_train):
+        # shift down
+        shift_image = shift(image.reshape((28, 28)), [1, 0], cval=0)
+        shift_image = shift_image.reshape([-1])
+        trainX_aug.append(shift_image.round())
+        trainY_aug.append(label)
+        # shift up
+        shift_image = shift(image.reshape((28, 28)), [-1, 0], cval=0)
+        shift_image = shift_image.reshape([-1])
+        trainX_aug.append(shift_image.round())
+        trainY_aug.append(label)
+
+        # shift right
+        shift_image = shift(image.reshape((28, 28)), [0, 1], cval=0)
+        shift_image = shift_image.reshape([-1])
+        trainX_aug.append(shift_image.round())
+        trainY_aug.append(label)
+        # shift left
+        shift_image = shift(image.reshape((28, 28)), [0, -1], cval=0)
+        shift_image = shift_image.reshape([-1])
+        trainX_aug.append(shift_image.round())
+        trainY_aug.append(label)
+
+    trainX_aug = pd.concat([trainX_aug, pd.DataFrame([X_train])], ignore_index=True)
+    trainY_aug = pd.Series(trainY_aug).append(y_train, ignore_index=True)
+    end = time.time()
+    print("Time to run:", end - begin)
+    return trainX_aug, trainY_aug
 
 def Saving_Data(X_train, X_test, y_train, y_test):
     print("Saving Data!")
@@ -84,8 +120,10 @@ if __name__ == "__main__":
 
     X_train, X_test, y_train, y_test = Loading_Data()
 
-    knn = K_Neighbors_Classifire(X_train, y_train)
-    Test_Model(knn, X_test, y_test)
-    Save_Model(knn, 'knn_Library')
-    knn = Load_Model('knn_Library')
-    Test_Model(knn, X_test, y_test)
+    X_train_aug, y_train_aug = Shift_Images(X_train, y_train)
+
+    #knn = K_Neighbors_Classifire(X_train, y_train)
+    #Test_Model(knn, X_test, y_test)
+    #Save_Model(knn, 'knn_Library')
+    #knn = Load_Model('knn_Library')
+    #Test_Model(knn, X_test, y_test)
