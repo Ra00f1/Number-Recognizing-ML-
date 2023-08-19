@@ -9,12 +9,14 @@ from sklearn.neighbors import KNeighborsClassifier
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+# Downloading MINST data
 def Download_MINST():
     mnist = fetch_openml('mnist_784', parser="auto")
     print("Data Keys: ",mnist.keys())
     print("Data Download Completed!")
     return mnist
 
+# Dividing data into training and testing
 def Divide_Data(mnist):
     print("Dividing Data!")
     x, y = mnist["data"], mnist["target"]
@@ -26,40 +28,69 @@ def Divide_Data(mnist):
 
     return X_train, X_test, y_train, y_test
 
+# Shifting images by one pixel to add more data
 def Shift_Images(X_train, y_train):
+    print("Shifting Images!")
     begin = time.time()
     trainX_aug = []
     trainY_aug = []
 
-    for image, label in zip(np.array(X_train), y_train):
+    for image, label in zip(np.array(X_train), y_train.values):
         # shift down
         shift_image = shift(image.reshape((28, 28)), [1, 0], cval=0)
         shift_image = shift_image.reshape([-1])
         trainX_aug.append(shift_image.round())
-        trainY_aug.append(label)
+        trainY_aug.extend(label)
         # shift up
         shift_image = shift(image.reshape((28, 28)), [-1, 0], cval=0)
         shift_image = shift_image.reshape([-1])
         trainX_aug.append(shift_image.round())
-        trainY_aug.append(label)
+        trainY_aug.extend(label)
 
         # shift right
         shift_image = shift(image.reshape((28, 28)), [0, 1], cval=0)
         shift_image = shift_image.reshape([-1])
         trainX_aug.append(shift_image.round())
-        trainY_aug.append(label)
+        trainY_aug.extend(label)
         # shift left
         shift_image = shift(image.reshape((28, 28)), [0, -1], cval=0)
         shift_image = shift_image.reshape([-1])
         trainX_aug.append(shift_image.round())
-        trainY_aug.append(label)
+        trainY_aug.extend(label)
+    print("Shifting Completed!")
+    end = time.time()
+    print("Time to run:", end - begin)
+    begin = time.time()
+    print("array to dataframe")
 
-    trainX_aug = pd.concat([trainX_aug, pd.DataFrame([X_train])], ignore_index=True)
-    trainY_aug = pd.Series(trainY_aug).append(y_train, ignore_index=True)
+    # Only neede if you have 16GB RAM
+    trainX_aug1 = pd.DataFrame(trainX_aug[:60000])
+    trainX_aug2 = pd.DataFrame(trainX_aug[60000:120000])
+    trainX_aug3 = pd.DataFrame(trainX_aug[120000:180000])
+    trainX_aug4 = pd.DataFrame(trainX_aug[180000:240000])
+
+    # The normal code
+    #trainX_aug = pd.DataFrame(trainX_aug)
+
+    trainX_aug = pd.concat([trainX_aug1, trainX_aug2, trainX_aug3, trainX_aug4], ignore_index=True)
+    trainY_aug = pd.DataFrame(trainY_aug)
+
+    trainY_aug.columns = ['class']
+    x_cols = []
+
+    # Correcting a mistake in the column names
+    for i in trainX_aug.columns:
+        x_cols.append("pixel"+str(i+1))
+    trainX_aug.columns = x_cols
+
+    # Connecting the old and the augmented data
+    trainX_aug = pd.concat([trainX_aug, X_train], ignore_index=True)
+    trainY_aug = pd.concat([trainY_aug, y_train], ignore_index=True)
     end = time.time()
     print("Time to run:", end - begin)
     return trainX_aug, trainY_aug
 
+# Saving data to csv files(4 data files)
 def Saving_Data(X_train, X_test, y_train, y_test):
     print("Saving Data!")
     X_train.to_csv("X_train", sep=',', index=False, encoding='utf-8')
@@ -68,6 +99,21 @@ def Saving_Data(X_train, X_test, y_train, y_test):
     y_test.to_csv("y_test", sep=',', index=False, encoding='utf-8')
     print("Saving Completed!")
 
+# Saving data to csv files(single data file)
+def Save_Csv(file, filename):
+    filename += '.csv'
+    filename = "Data/" + filename
+    file.to_csv(filename, sep=',', index=False, encoding='utf-8')
+    print("Saved File: ", filename)
+
+# Loading data from csv files(single data file)
+def Load_Csv(filename):
+    filename += '.csv'
+    filename = "Data/" + filename + '.csv'
+    print("Loading File: ", filename)
+    return pd.read_csv(filename, sep=',')
+
+# Loading data from csv files(4 data files)
 def Loading_Data():
     print("Loading Data!")
     X_train = pd.read_csv("Data/X_train", sep=',')
@@ -94,19 +140,22 @@ def K_Neighbors_Classifire(X_train, y_train):
 
     return knn
 
+# Testing model
 def Test_Model(knn, X_test, y_test):
     print("Testing Model!")
     y_pred = knn.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     print("Accuracy:", accuracy)
 
+# Saving KNN model
 def Save_Model(knn, filename):
-    filename += '.pkl'
+    filename = "Trained/" + filename + '.pkl'
     joblib.dump(knn, filename)
     print("Saved Model: ", filename)
 
+# Loading a saved KNN model
 def Load_Model(filename):
-    filename += '.pkl'
+    filename = "Trained/" + filename + '.pkl'
     print("Loading Model: ", filename)
     return joblib.load(filename)
 
@@ -120,10 +169,12 @@ if __name__ == "__main__":
 
     X_train, X_test, y_train, y_test = Loading_Data()
 
-    X_train_aug, y_train_aug = Shift_Images(X_train, y_train)
+    #X_train_aug, y_train_aug = Shift_Images(X_train, y_train)
+    #X_train_aug = Load_Csv('X_train_aug')
+    #y_train_aug = Load_Csv('y_train_aug')
 
-    #knn = K_Neighbors_Classifire(X_train, y_train)
-    #Test_Model(knn, X_test, y_test)
-    #Save_Model(knn, 'knn_Library')
-    #knn = Load_Model('knn_Library')
-    #Test_Model(knn, X_test, y_test)
+    #knn = K_Neighbors_Classifire(X_train_aug, y_train_aug.values.ravel())
+    #Test_Model(knn, X_test, y_test.values.ravel())
+    #Save_Model(knn, 'knn_Library_V2')
+    knn = Load_Model('knn_Library_V2')
+    Test_Model(knn, X_test, y_test)
