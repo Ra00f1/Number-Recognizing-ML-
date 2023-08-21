@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import cv2
 
 # Downloading MINST data
 def Download_MINST():
@@ -108,7 +109,6 @@ def Save_Csv(file, filename):
 
 # Loading data from csv files(single data file)
 def Load_Csv(filename):
-    filename += '.csv'
     filename = "Data/" + filename + '.csv'
     print("Loading File: ", filename)
     return pd.read_csv(filename, sep=',')
@@ -159,6 +159,92 @@ def Load_Model(filename):
     print("Loading Model: ", filename)
     return joblib.load(filename)
 
+def sketch_transform(image):  # in here you can do image filteration
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    msk = cv2.inRange(hsv, np.array([0, 0, 150]), np.array([179, 150, 200]))
+    krn = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 3))
+    dlt = cv2.dilate(msk, krn, iterations=1)
+    thr = 255 - cv2.bitwise_and(dlt, msk)
+    invert = cv2.bitwise_not(thr)
+    return invert
+
+def Webcam(knn):
+    videoCaptureObject = cv2.VideoCapture(0)
+    upper_left = (250, 250)
+    bottom_right = (350, 350)
+
+    result = True
+    while (result):
+        ret, image_frame = videoCaptureObject.read()
+
+        # Rectangle marker
+        r = cv2.rectangle(image_frame, upper_left, bottom_right, (200, 50, 300), 5)
+        rect_img = image_frame[upper_left[1]: bottom_right[1], upper_left[0]: bottom_right[0]]
+
+        sketcher_rect = rect_img
+        sketcher_rect = sketch_transform(sketcher_rect)
+
+        # Conversion for 3 channels to put back on original image (streaming)
+        sketcher_rect_rgb = cv2.cvtColor(sketcher_rect, cv2.COLOR_GRAY2RGB)
+
+        # Replacing the sketched image on Region of Interest
+        image_frame[upper_left[1]: bottom_right[1], upper_left[0]: bottom_right[0]] = sketcher_rect_rgb
+
+        cv2.imshow("test", image_frame)
+
+        #    break  # esc to quit
+        k = cv2.waitKey(1)
+        if k % 256 == 27:
+            print("Escape hit, closing...")
+            break
+        elif k == ord('s'):
+            cv2.imwrite("input_image.jpg", sketcher_rect_rgb)
+            img = cv2.imread("input_image.jpg")
+
+            # you can do those function inside the sketch_transform def
+
+            gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            gray_img = cv2.resize(gray_image, (28, 28)).reshape(1, 28, 28, 1)
+            # ax[2,1].imshow(gray_img.reshape(28, 28) , cmap = "gray")
+            cv2.imshow("image", gray_img.reshape(28, 28))
+            Test_Case_Array = gray_img.reshape(28, 28)
+            Test_Case_Array = Test_Case_Array.reshape(1, -1)
+            Test_Case = pd.DataFrame(Test_Case_Array)
+            x_cols = []
+
+            for i in Test_Case.columns:
+                x_cols.append("pixel" + str(i + 1))
+            Test_Case.columns = x_cols
+            y_pred = knn.predict(Test_Case)
+            print("predicted alphabet  = ", y_pred)
+
+            print("if correct types Y/y else write the correct answer to add to the dataset")
+            key = cv2.waitKey(0)
+            key_list = [ord('0'), ord('1'), ord('2'), ord('3'), ord('4'), ord('5'), ord('6'), ord('7'), ord('8'), ord('9')]
+
+            if key == 27:
+                print("Escape hit, closing...")
+                break
+            if key == ord('Y') or key == ord('y'):
+                print("Thank you for using our service")
+            elif key in key_list:
+
+                X_train_aug = Load_Csv('X_train_aug_V2')
+                y_train_aug = Load_Csv('y_train_aug_V2')
+                y_Test_Case = [key_list.index(key)]
+                y_Test_Case = pd.DataFrame(y_Test_Case)
+                y_Test_Case.columns = ['class']
+                trainX_aug = pd.concat([X_train_aug, Test_Case], ignore_index=True)
+                trainY_aug = pd.concat([y_train_aug, y_Test_Case], ignore_index=True)
+
+                Save_Csv(trainX_aug, 'X_train_aug_V2')
+                Save_Csv(trainY_aug, 'y_train_aug_V2')
+
+                knn = K_Neighbors_Classifire(trainX_aug, trainY_aug.values.ravel())
+
+                Save_Model(knn, 'knn_Library_V3')
+                knn = Load_Model('knn_Library_V3')
+
 if __name__ == "__main__":
 
     #Downloading and saving mnist
@@ -167,7 +253,7 @@ if __name__ == "__main__":
     #X_train, X_test, y_train, y_test = Divide_Data(mnist)
     #Saving_Data(X_train, X_test, y_train, y_test)
 
-    X_train, X_test, y_train, y_test = Loading_Data()
+    #X_train, X_test, y_train, y_test = Loading_Data()
 
     #X_train_aug, y_train_aug = Shift_Images(X_train, y_train)
     #X_train_aug = Load_Csv('X_train_aug')
@@ -176,5 +262,12 @@ if __name__ == "__main__":
     #knn = K_Neighbors_Classifire(X_train_aug, y_train_aug.values.ravel())
     #Test_Model(knn, X_test, y_test.values.ravel())
     #Save_Model(knn, 'knn_Library_V2')
-    knn = Load_Model('knn_Library_V2')
-    Test_Model(knn, X_test, y_test)
+    knn = Load_Model('knn_Library_V3')
+    Webcam(knn)
+
+    #for i  in range(20):
+    #    print(y_test[i:i+1].values)
+    #    pred = knn.predict(X_test[i:i+1])
+    #    pred_percent = knn.predict_proba(X_test[i:i+1])
+    #    print(pred, pred_percent)
+    #Test_Model(knn, X_test, y_test)

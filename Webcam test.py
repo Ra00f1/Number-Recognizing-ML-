@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+
+
 def show_webcam(mirror=False):
     n = 0
 # use the device /dev/video{n} in this case /dev/video0
