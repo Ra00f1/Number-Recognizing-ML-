@@ -172,8 +172,11 @@ def Webcam(knn):
     videoCaptureObject = cv2.VideoCapture(0)
     upper_left = (250, 250)
     bottom_right = (350, 350)
+    Test_Case_List = []
+    Test_Case_Answer_List = []
 
     result = True
+    print("Escape to close, s/S to test, and m/M to mass test")
     while (result):
         ret, image_frame = videoCaptureObject.read()
 
@@ -198,10 +201,10 @@ def Webcam(knn):
             print("Escape hit, closing...")
             break
         elif k == ord('s'):
+            key_list = [ord('0'), ord('1'), ord('2'), ord('3'), ord('4'), ord('5'), ord('6'), ord('7'), ord('8'),
+                        ord('9')]
             cv2.imwrite("input_image.jpg", sketcher_rect_rgb)
             img = cv2.imread("input_image.jpg")
-
-            # you can do those function inside the sketch_transform def
 
             gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             gray_img = cv2.resize(gray_image, (28, 28)).reshape(1, 28, 28, 1)
@@ -228,22 +231,47 @@ def Webcam(knn):
             if key == ord('Y') or key == ord('y'):
                 print("Thank you for using our service")
             elif key in key_list:
+                print("The real answer is: ", key - 48)
+                Test_Case_List.append(Test_Case_Array)
+                Test_Case_Answer_List.append(key - 48)
+            print("---------------------------")
 
-                X_train_aug = Load_Csv('X_train_aug_V2')
-                y_train_aug = Load_Csv('y_train_aug_V2')
-                y_Test_Case = [key_list.index(key)]
-                y_Test_Case = pd.DataFrame(y_Test_Case)
-                y_Test_Case.columns = ['class']
-                trainX_aug = pd.concat([X_train_aug, Test_Case], ignore_index=True)
-                trainY_aug = pd.concat([y_train_aug, y_Test_Case], ignore_index=True)
+    if len(Test_Case_List) > 0:
+        Update_Model(Test_Case_List, Test_Case_Answer_List) # update the model
+    videoCaptureObject.release()
+    cv2.destroyAllWindows()
 
-                Save_Csv(trainX_aug, 'X_train_aug_V2')
-                Save_Csv(trainY_aug, 'y_train_aug_V2')
+def Update_Model(Test_Case_List, Test_Case_Answer_List):
+    print("---------------------------")
+    print("Updating the model")
 
-                knn = K_Neighbors_Classifire(trainX_aug, trainY_aug.values.ravel())
+    X_train_aug = Load_Csv('X_train_aug_V2')
+    y_train_aug = Load_Csv('y_train_aug_V2')
 
-                Save_Model(knn, 'knn_Library_V3')
-                knn = Load_Model('knn_Library_V3')
+    print("X_train_aug.shape = ", Test_Case_List)
+
+    Test_Case_DF = pd.DataFrame(Test_Case_List)
+    x_cols = []
+    for i in Test_Case_DF.columns:
+        x_cols.append("pixel" + str(i + 1))
+    Test_Case_DF.columns = x_cols
+
+    y_Test_Case = pd.DataFrame(Test_Case_Answer_List)
+    y_Test_Case.columns = ['class']
+    print("Test_Case_DF.shape = ", Test_Case_DF)
+    print("y_Test_Case.shape = ", y_Test_Case)
+    trainX_aug = pd.concat([X_train_aug, Test_Case_DF], ignore_index=True)
+    trainY_aug = pd.concat([y_train_aug, y_Test_Case], ignore_index=True)
+    quit()
+    Save_Csv(trainX_aug, 'X_train_aug_V2')
+    Save_Csv(trainY_aug, 'y_train_aug_V2')
+
+    knn = K_Neighbors_Classifire(trainX_aug, trainY_aug.values.ravel())
+
+    Save_Model(knn, 'knn_Library_V3')
+    knn = Load_Model('knn_Library_V3')
+    print("Model Updated")
+    print("---------------------------")
 
 if __name__ == "__main__":
 
