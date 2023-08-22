@@ -1,3 +1,34 @@
+"""
+A prototype program to test the KNeighborsClassifier model on a live video feed.
+
+Mnist data is used to train the model. The data is shifted by one pixel to add more data to the training set.
+
+The program uses the cv2 library to capture the video feed from the webcam. The video feed is then processed to extract the region of interest (ROI) which is then passed to the model for prediction.
+
+Sources:
+
+1- https://towardsdatascience.com/how-to-build-knn-from-scratch-in-python-5e22b8920bd2
+2- https://www.ibm.com/topics/knn#:~:text=Next%20steps-,K-Nearest%20Neighbors%20Algorithm,of%20an%20individual%20data%20point.
+3- https://machinelearningmastery.com/tutorial-to-implement-k-nearest-neighbors-in-python-from-scratch/
+4- https://stathwang.github.io/k-nearest-neighbors-from-scratch-in-python.html
+5- https://www.geeksforgeeks.org/k-nearest-neighbours/
+
+    Stackoverflow:
+    6- https://stackoverflow.com/questions/64773918/creating-and-capturing-sub-region-on-web-cam-using-opencv
+
+    Pandas:
+    7- https://pandas.pydata.org/docs/reference/api/pandas.concat.html
+
+    OpenCV:
+    8- https://stackoverflow.com/questions/17987598/how-can-i-use-imshow-to-display-multiple-images-in-multiple-windows
+    9- https://stackoverflow.com/questions/17987598/how-can-i-use-imshow-to-display-multiple-images-in-multiple-windows
+
+
+
+"""
+
+
+
 import time
 from scipy.ndimage import shift
 import numpy as np
@@ -130,7 +161,7 @@ def K_Neighbors_Classifire(X_train, y_train):
     print("Training Completed!")
 
     """
-    Test:
+    #Test:
      
     for a in range(1, 100000):
         if y_test[a-1:a].values != knn.predict(X_test[a-1:a]):
@@ -159,7 +190,8 @@ def Load_Model(filename):
     print("Loading Model: ", filename)
     return joblib.load(filename)
 
-def sketch_transform(image):  # in here you can do image filteration
+# Make the target area (Rectangle)
+def sketch_transform(image):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     msk = cv2.inRange(hsv, np.array([0, 0, 150]), np.array([179, 150, 200]))
     krn = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 3))
@@ -168,6 +200,7 @@ def sketch_transform(image):  # in here you can do image filteration
     invert = cv2.bitwise_not(thr)
     return invert
 
+# Testing model with webcam which auto updates at the end with the tested images and their real values if provided
 def Webcam(knn):
     videoCaptureObject = cv2.VideoCapture(0)
     upper_left = (250, 250)
@@ -176,7 +209,7 @@ def Webcam(knn):
     Test_Case_Answer_List = []
 
     result = True
-    print("Escape to close, s/S to test, and m/M to mass test")
+    print("Escape to close, s/S to test")
     while (result):
         ret, image_frame = videoCaptureObject.read()
 
@@ -206,6 +239,7 @@ def Webcam(knn):
             cv2.imwrite("input_image.jpg", sketcher_rect_rgb)
             img = cv2.imread("input_image.jpg")
 
+            # Mask image to get the input image
             gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             gray_img = cv2.resize(gray_image, (28, 28)).reshape(1, 28, 28, 1)
             # ax[2,1].imshow(gray_img.reshape(28, 28) , cmap = "gray")
@@ -241,6 +275,7 @@ def Webcam(knn):
     videoCaptureObject.release()
     cv2.destroyAllWindows()
 
+# Function to auto update the model with the tested images and their real values after Webcam() is finished
 def Update_Model(Test_Case_List, Test_Case_Answer_List):
     print("---------------------------")
     print("Updating the model")
@@ -248,8 +283,8 @@ def Update_Model(Test_Case_List, Test_Case_Answer_List):
     X_train_aug = Load_Csv('X_train_aug_V2')
     y_train_aug = Load_Csv('y_train_aug_V2')
 
-    print("X_train_aug.shape = ", Test_Case_List)
-
+    Test_Case_List = np.array(Test_Case_List)
+    Test_Case_List = Test_Case_List.reshape(-1, 784)
     Test_Case_DF = pd.DataFrame(Test_Case_List)
     x_cols = []
     for i in Test_Case_DF.columns:
@@ -258,11 +293,8 @@ def Update_Model(Test_Case_List, Test_Case_Answer_List):
 
     y_Test_Case = pd.DataFrame(Test_Case_Answer_List)
     y_Test_Case.columns = ['class']
-    print("Test_Case_DF.shape = ", Test_Case_DF)
-    print("y_Test_Case.shape = ", y_Test_Case)
     trainX_aug = pd.concat([X_train_aug, Test_Case_DF], ignore_index=True)
     trainY_aug = pd.concat([y_train_aug, y_Test_Case], ignore_index=True)
-    quit()
     Save_Csv(trainX_aug, 'X_train_aug_V2')
     Save_Csv(trainY_aug, 'y_train_aug_V2')
 
@@ -275,27 +307,23 @@ def Update_Model(Test_Case_List, Test_Case_Answer_List):
 
 if __name__ == "__main__":
 
-    #Downloading and saving mnist
-    #
-    #mnist = Download_MINST()
-    #X_train, X_test, y_train, y_test = Divide_Data(mnist)
-    #Saving_Data(X_train, X_test, y_train, y_test)
+    # Downloading and saving mnist
+    mnist = Download_MINST()
 
-    #X_train, X_test, y_train, y_test = Loading_Data()
+    X_train, X_test, y_train, y_test = Divide_Data(mnist)
+    Saving_Data(X_train, X_test, y_train, y_test)
 
-    #X_train_aug, y_train_aug = Shift_Images(X_train, y_train)
-    #X_train_aug = Load_Csv('X_train_aug')
-    #y_train_aug = Load_Csv('y_train_aug')
+    X_train, X_test, y_train, y_test = Loading_Data()
 
-    #knn = K_Neighbors_Classifire(X_train_aug, y_train_aug.values.ravel())
-    #Test_Model(knn, X_test, y_test.values.ravel())
-    #Save_Model(knn, 'knn_Library_V2')
+    X_train_aug, y_train_aug = Shift_Images(X_train, y_train)
+    X_train_aug = Load_Csv('X_train_aug')
+    y_train_aug = Load_Csv('y_train_aug')
+
+    knn = K_Neighbors_Classifire(X_train_aug, y_train_aug.values.ravel())
+    Test_Model(knn, X_test, y_test.values.ravel())
+    Save_Model(knn, 'knn_Library_V3')
     knn = Load_Model('knn_Library_V3')
+
+    # Start webcam
     Webcam(knn)
 
-    #for i  in range(20):
-    #    print(y_test[i:i+1].values)
-    #    pred = knn.predict(X_test[i:i+1])
-    #    pred_percent = knn.predict_proba(X_test[i:i+1])
-    #    print(pred, pred_percent)
-    #Test_Model(knn, X_test, y_test)
