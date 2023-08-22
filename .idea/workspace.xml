@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45d78362-25ce-4305-bc07-b7a8bab4bce2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/KNeighbors.py" beforeDir="false" afterPath="$PROJECT_DIR$/KNeighbors.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -253,6 +252,7 @@
       <workItem from="1692627972037" duration="5010000" />
       <workItem from="1692697142480" duration="1982000" />
       <workItem from="1692701018888" duration="12000" />
+      <workItem from="1692701182471" duration="5000" />
     </task>
     <servers />
   </component>

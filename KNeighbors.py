@@ -92,6 +92,7 @@ def Shift_Images(X_train, y_train):
     print("Time to run:", end - begin)
     begin = time.time()
     print("array to dataframe")
+    print("This step will take a few minutes!")
 
     # Only neede if you have 16GB RAM
     trainX_aug1 = pd.DataFrame(trainX_aug[:60000])
