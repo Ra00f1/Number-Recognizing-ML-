@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="45d78362-25ce-4305-bc07-b7a8bab4bce2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Camera.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/KNeighbors.py" beforeDir="false" afterPath="$PROJECT_DIR$/KNeighbors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Webcam test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -255,7 +251,8 @@
       <workItem from="1692354700035" duration="12859000" />
       <workItem from="1692610056586" duration="5663000" />
       <workItem from="1692627972037" duration="5010000" />
-      <workItem from="1692697142480" duration="1811000" />
+      <workItem from="1692697142480" duration="1982000" />
+      <workItem from="1692701018888" duration="12000" />
     </task>
     <servers />
   </component>

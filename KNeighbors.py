@@ -23,8 +23,6 @@ Sources:
     8- https://stackoverflow.com/questions/17987598/how-can-i-use-imshow-to-display-multiple-images-in-multiple-windows
     9- https://stackoverflow.com/questions/17987598/how-can-i-use-imshow-to-display-multiple-images-in-multiple-windows
 
-
-
 """
 
 
@@ -306,6 +304,8 @@ def Update_Model(Test_Case_List, Test_Case_Answer_List):
     print("---------------------------")
 
 if __name__ == "__main__":
+    os.mkdir('Data')
+    os.mkdir('Trained')
 
     # Downloading and saving mnist
     mnist = Download_MINST()
@@ -316,6 +316,8 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = Loading_Data()
 
     X_train_aug, y_train_aug = Shift_Images(X_train, y_train)
+    Save_Csv(X_train_aug, 'X_train_aug')
+    Save_Csv(y_train_aug, 'y_train_aug')
     X_train_aug = Load_Csv('X_train_aug')
     y_train_aug = Load_Csv('y_train_aug')
 
@@ -326,4 +328,3 @@ if __name__ == "__main__":
 
     # Start webcam
     Webcam(knn)
-
